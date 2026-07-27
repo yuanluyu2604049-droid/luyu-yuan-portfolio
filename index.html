@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原露语 · Portfolio</title>
+  <style>
+    :root {
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-tertiary: #8a8a8a;
+      --text-quaternary: #b0b0b0;
+      --border: #e5e5e5;
+      --surface-muted: #f5f5f5;
+      --bg: #ffffff;
+      --accent: #2563eb;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #f0f0f0;
+        --text-secondary: #c0c0c0;
+        --text-tertiary: #808080;
+        --text-quaternary: #606060;
+        --border: #333333;
+        --surface-muted: #1a1a1a;
+        --bg: #0a0a0a;
+        --accent: #60a5fa;
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text-primary);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== Navigation ===== */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transform: translateY(-100%);
+      transition: transform 0.4s ease, border-color 0.3s ease;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .nav { background: rgba(10,10,10,0.85); }
+    }
+
+    .nav.visible {
+      transform: translateY(0);
+      border-bottom-color: var(--border);
+    }
+
+    .nav-logo {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--text-primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-mobile-toggle span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text-primary);
+      margin: 5px 0;
+      transition: 0.3s ease;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 24px;
+      position: relative;
+    }
+
+    .hero-name {
+      font-size: clamp(32px, 8vw, 48px);
+      font-weight: 500;
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+    }
+
+    .hero-tagline {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .hero-desc {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+
+    .hero-line {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 24px auto;
+    }
+
+    .hero-cta {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-primary);
+    }
+
+    .btn:hover {
+      background: var(--surface-muted);
+      border-color: var(--text-tertiary);
+    }
+
+    .btn-primary {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--text-secondary);
+      border-color: var(--text-secondary);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+    }
+
+    .scroll-hint span {
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* ===== Sections ===== */
+    .section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .sec-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-quaternary);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 32px;
+    }
+
+    /* ===== About ===== */
+    .about-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .about-text p + p {
+      margin-top: 16px;
+    }
+
+    .about-links {
+      margin-top: 20px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .text-link {
+      font-size: 14px;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.2s ease;
+    }
+
+    .text-link:hover {
+      opacity: 0.7;
+    }
+
+    .text-link svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .about-highlight {
+      display: flex;
+      gap: 32px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .highlight-item {
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .highlight-num {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .highlight-label {
+      font-size: 12px;
+      color: var(--text-quaternary);
+      margin-top: 4px;
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: var(--text-tertiary);
+      transform: translateY(-2px);
+    }
+
+    .card-link-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      z-index: 1;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .card-content .text-link,
+    .card-content .card-tags {
+      pointer-events: auto;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-quaternary);
+      flex-shrink: 0;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: var(--surface-muted);
+      color: var(--text-tertiary);
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .card-award {
+      font-size: 12px;
+      color: var(--text-quaternary);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    .card-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Leadership ===== */
+    .lead-item {
+      padding: 20px 0;
+    }
+
+    .lead-item + .lead-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .lead-role {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .lead-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .lead-meta {
+      font-size: 12px;
+      color: var(--text-quaternary);
+      margin-top: 6px;
+    }
+
+    /* ===== Awards ===== */
+    .award-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 14px 0;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+      margin: 0 -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 6px;
+    }
+
+    .award-row:hover {
+      background: var(--surface-muted);
+    }
+
+    .award-row:last-child {
+      border-bottom: none;
+    }
+
+    .award-name {
+      color: var(--text-secondary);
+      flex: 1;
+      padding-right: 16px;
+      line-height: 1.6;
+    }
+
+    .award-year {
+      color: var(--text-quaternary);
+      font-size: 12px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* ===== Contact ===== */
+    .contact-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      font-size: 14px;
+      color: var(--text-primary);
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .contact-link:hover {
+      background: var(--surface-muted);
+      border-color: var(--text-tertiary);
+    }
+
+    .contact-link svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-tertiary);
+    }
+
+    /* ===== Back to Top ===== */
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      z-index: 99;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      border-color: var(--text-tertiary);
+      transform: translateY(-2px);
+    }
+
+    .back-to-top svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center;
+      padding: 48px 24px;
+      font-size: 12px;
+      color: var(--text-quaternary);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px 24px;
+        gap: 16px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-mobile-toggle {
+        display: block;
+      }
+
+      .about-highlight {
+        gap: 20px;
+      }
+
+      .highlight-num {
+        font-size: 22px;
+      }
+
+      .award-row {
+        flex-direction: column;
+      }
+
+      .award-year {
+        margin-top: 4px;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 200px;
+        justify-content: center;
+      }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <a href="#" class="nav-logo">原露语</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#leadership">Leadership</a></li>
+      <li><a href="#awards">Awards</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-name">原露语</div>
+    <div class="hero-tagline">兴趣方向 · 集成电路 & 具身智能</div>
+    <div class="hero-line"></div>
+    <div class="hero-desc">
+      从系外行星的动力学分析到集成电路的创新设计，<br>
+      在宇宙尺度与纳米尺度之间寻找系统思维的统一。
+    </div>
+    <div class="hero-cta">
+      <a href="#about" class="btn btn-primary">Explore My Journey</a>
+      <a href="#contact" class="btn">Get in Touch</a>
+    </div>
+    <a href="#about" class="scroll-hint" aria-label="Scroll down">
+      <span></span>
+    </a>
+  </section>
+
+  <div class="container">
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="sec-title">About</div>
+      <div class="about-text">
+        <p>在中国科学院国家天文台赵刚院士与赵斐博士的指导下，我完成了对 5,000 余颗系外行星的动力学数据分析与宜居性筛选，研究成果发表于《中国国家天文》（中国科技核心期刊）2024 年第 1 期。</p>
+        <p>2024 年夏，我在北京航空航天大学集成电路学院参加"登峰计划"，系统学习半导体物理与芯片设计基础。我意识到：天文观测是在宇宙尺度上寻找规律，而集成电路设计是在微纳尺度上创造秩序——两者都需要极致的系统思维与工程精确性。</p>
+        <p>我致力于 EEE / ECE 领域的深造，尤其关注具身智能中机械电子硬件与信息软件的交叉，期望在"传感—计算—执行"的硬件闭环中找到创新突破口。</p>
+      </div>
+      <div class="about-links">
+        <a href="file:///C:/Code/python-class/lesson06/resume.html/%E5%8E%9F%E9%9C%B2%E8%AF%AD_%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E5%8F%8A%E5%A4%A7%E6%B0%94%E6%80%A7%E8%B4%A8%E5%AE%9C%E5%B1%85%E6%80%A7%E7%AD%9B%E9%80%89%E6%8E%A2%E7%A9%B6.pdf" target="_blank" rel="noopener" class="text-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read my paper
+        </a>
+        <a href="file:///C:/Code/python-class/lesson06/resume.html/2401%E6%98%9F%E5%85%89%E6%A0%A1%E5%9B%AD-%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E5%AE%9C%E5%B1%85%E6%80%A7%E7%9A%84%E5%8A%A8%E5%8A%9B%E5%AD%A6%E7%AD%9B%E9%80%8986-87.pdf" target="_blank" rel="noopener" class="text-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read my paper published on Chinese National Astronomy
+        </a>
+      </div>
+      <div class="about-highlight">
+        <div class="highlight-item">
+          <div class="highlight-num">5,000+</div>
+          <div class="highlight-label">系外行星分析</div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-num">1</div>
+          <div class="highlight-label">核心期刊论文</div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-num">Top 70</div>
+          <div class="highlight-label">国际基础科学大会</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Research -->
+    <section class="section" id="research">
+      <div class="sec-title">Research & Projects</div>
+
+      <div class="card">
+        <a href="file:///C:/Code/python-class/lesson06/resume.html/%E5%8E%9F%E9%9C%B2%E8%AF%AD_%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E5%8F%8A%E5%A4%A7%E6%B0%94%E6%80%A7%E8%B4%A8%E5%AE%9C%E5%B1%85%E6%80%A7%E7%AD%9B%E9%80%89%E6%8E%A2%E7%A9%B6.pdf" target="_blank" rel="noopener" class="card-link-overlay" aria-label="View paper"></a>
+        <div class="card-content">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            系外行星宜居性动力学筛选
+          </div>
+          <div class="card-tags">
+            <span class="tag">天体物理</span>
+            <span class="tag">数据分析</span>
+            <span class="tag">系统建模</span>
+          </div>
+          <div class="card-desc">基于 5,000 余颗已确认系外行星的观测数据，构建动力学筛选模型，以类地行星为基准探索宜居边界。研究各特征之间的相关性，并进一步对系外行星大气进行探究分析。</div>
+          <div class="card-award">第 24 届北京市金鹏科技论坛 · 高中组一等奖 | 第 43 届北京市青少年科技创新大赛 · 高中组二等奖</div>
+          <div class="card-actions">
+            <a href="file:///C:/Code/python-class/lesson06/resume.html/2401%E6%98%9F%E5%85%89%E6%A0%A1%E5%9B%AD-%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E5%AE%9C%E5%B1%85%E6%80%A7%E7%9A%84%E5%8A%A8%E5%8A%9B%E5%AD%A6%E7%AD%9B%E9%80%8986-87.pdf" target="_blank" rel="noopener" class="text-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              View Publication
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <a href="C:\Code\python-class\lesson06\resume.html\薄膜制备技术心得体会.docx" target="_blank" rel="noopener" class="card-link-overlay" aria-label="Beihang University"></a>
+        <div class="card-content">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            集成电路研学营 · 登峰计划
+          </div>
+          <div class="card-tags">
+            <span class="tag">VLSI</span>
+            <span class="tag">半导体物理</span>
+            <span class="tag">北京航空航天大学</span>
+          </div>
+          <div class="card-desc">在北京航空航天大学集成电路学院进行集中实验室学习，涵盖 CMOS 基础、逻辑门设计以及芯片制造流程。首次在硅晶圆层面接触智能系统的硬件基础。</div>
+          <div class="card-actions">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <a href="https://www.icbs.cn/" target="_blank" rel="noopener" class="card-link-overlay" aria-label="ICBS 2024"></a>
+        <div class="card-content">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            2024 国际基础科学大会 · 高中生海报展
+          </div>
+          <div class="card-tags">
+            <span class="tag">学术英语</span>
+            <span class="tag">公开答辩</span>
+            <span class="tag">全国前 70</span>
+          </div>
+          <div class="card-desc">入围 2024 国际基础科学大会高中生海报展（全国前 70 名），在北京雁栖湖应用数学研究院向菲尔兹奖得主丘成桐教授进行英文答辩报告。</div>
+          <div class="card-actions">
+            <a href="file:///C:/Code/python-class/lesson06/resume.html/Beijing%20No.8%20High%20school+Luyu%20Yuan+Physics.pdf" target="_blank" rel="noopener" class="text-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              My poster
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership -->
+    <section class="section" id="leadership">
+      <div class="sec-title">Leadership</div>
+
+      <div class="lead-item">
+        <div class="lead-role">北京八中少年科学院 · 副院长兼宣传部部长</div>
+        <div class="lead-desc">负责少年科学院公众号"梦蹊笔谈"的宣传运营，统筹校内活动的宣传与组织。与科研计划对接，协调不同年级、不同学科、不同计划的学生群体。</div>
+        <div class="lead-meta">2022.9 — 2026.1</div>
+      </div>
+
+      <div class="lead-item">
+        <div class="lead-role">北京八中"地学社" · 创始人、社长</div>
+        <div class="lead-desc">在素质班期间发起并创办学校首个地球科学社团，历时 4 年任职。组织社团活动、撰写培训学案、设计文创产品、协调竞赛学习进程，从零开始建立活跃社群。</div>
+        <div class="lead-meta">2021.9 — 2025.9</div>
+      </div>
+
+      <div class="lead-item">
+        <div class="lead-role">北京八中"南斗天文社" · 核心成员兼副社长</div>
+        <div class="lead-desc">组织举办校内"马门溪龙杯"天文竞赛，参与出题、秩序管理与判分。联合少年科学院开展多项科技创新活动，推动校园天文文化传播。</div>
+        <div class="lead-meta">2022.9 — 2025.9</div>
+      </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="section" id="awards">
+      <div class="sec-title">Awards & Honors</div>
+
+      <div class="award-row">
+        <div class="award-name">北京青少年科技俱乐部"科研实践"活动 · 优秀学员</div>
+        <div class="award-year">2024.11</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">第 24 届北京市中小学生金鹏科技论坛 · 高中组一等奖</div>
+        <div class="award-year">2024.6</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">第 43 届北京市青少年科技创新大赛 · 高中组二等奖</div>
+        <div class="award-year">2024.3</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">第 43 届北京市青少年科技创新大赛 · 专项奖"雁栖创新赛"三等奖</div>
+        <div class="award-year">2024.3</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">全国中学生地球科学奥林匹克竞赛 · 省级二等奖（2023 & 2024）</div>
+        <div class="award-year">2023 — 2024</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">第十六届"希望中国"青少年文化素养演讲风采展示 · 高中组特等奖（北京市第三名）</div>
+        <div class="award-year">2025.8</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">北京电视台"讲好中国故事文明互鉴少年使者"</div>
+        <div class="award-year">2025.8</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">北京市西城区第十八届"少年科学奖"</div>
+        <div class="award-year">2023.12</div>
+      </div>
+      <div class="award-row">
+        <div class="award-name">北京八中科技节 · 一等奖 & "科技之星"</div>
+        <div class="award-year">2023.12</div>
+      </div>
+    </section>
+
+    <!-- Beyond -->
+    <section class="section" id="beyond">
+      <div class="sec-title">Beyond the Lab</div>
+      <div class="about-text">
+        <p>辩论赛冠军（高一"每月一辩"四辩，负责逻辑梳理与结辩稿撰写）· 戏剧导演兼编剧（《苏子琼州》）· 校篮球队成员（高二学年季军）· 长跑比赛第五名（2.5km 环湖跑）· 西城区图书馆长期志愿者（2023—2025）</p>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="sec-title">Contact</div>
+      <div class="contact-text">未来发展方向为 EEE 或 ECE。欢迎就电子信息、集成电路、具身智能、自动化或应用物理学与工程的交叉领域进行交流。</div>
+      <div class="contact-links">
+        <a href="mailto:yuan_luyu@163.com" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Designed with precision and curiosity.
+  </div>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script>
+    // Navigation show/hide on scroll
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        navbar.classList.add('visible');
+      } else {
+        navbar.classList.remove('visible');
+      }
+      lastScroll = currentScroll;
+    });
+
+    // Mobile menu toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 500) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Smooth scroll for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
